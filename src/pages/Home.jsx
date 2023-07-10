@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPopularMovies } from 'helpers/fetchPopMovies';
-import { Card, Col, Row } from 'react-bootstrap';
 
 export const Home = () => {
   const [popularMovies, setPopularMovies] = useState([]);
