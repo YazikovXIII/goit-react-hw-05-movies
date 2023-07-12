@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { StyledMoviesList } from './Home.styled';
 
 const API_KEY = '040fbcd62819e93b33d68dfe6cbb3776';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
@@ -40,7 +41,15 @@ export const MovieDetails = () => {
       />
       <h1>{movieDetails.title}</h1>
       <p>{movieDetails.overview}</p>
-      {/* Відображення інших деталей фільму */}
+      <StyledMoviesList>
+        <li>
+          <Link to={`/movies/${movieDetails.id}/cast`}>Cast</Link>
+        </li>
+        <li>
+          <Link to={`/movies/${movieDetails.id}/reviews`}>Reviews</Link>
+        </li>
+      </StyledMoviesList>
+      <Outlet />
     </div>
   );
 };

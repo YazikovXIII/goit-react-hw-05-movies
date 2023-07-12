@@ -11,12 +11,8 @@ export const Home = () => {
       try {
         const movies = await fetchPopularMovies();
         setPopularMovies(movies);
-        console.log(movies);
       } catch (error) {
-        console.error(
-          'Помилка під час отримання списку популярних фільмів:',
-          error.message
-        );
+        console.error('Oooops!:', error.message);
       }
     };
 
