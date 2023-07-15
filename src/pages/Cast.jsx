@@ -1,40 +1,34 @@
-// export const Cast = () => {
-//   return <p>Cast will be here</p>;
-// };
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { fetchCastByMovieId } from 'helpers/fetchDataMovies';
 
-const API_KEY = '040fbcd62819e93b33d68dfe6cbb3776';
-
-export const Cast = () => {
+const Cast = () => {
   const { movieId } = useParams();
   const [cast, setCast] = useState([]);
 
   useEffect(() => {
-    const fetchCast = async () => {
+    const fetchMovieCast = async () => {
       try {
-        const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`;
-        const response = await axios.get(url);
-        const castData = response.data.cast;
+        const castData = await fetchCastByMovieId(movieId);
         setCast(castData);
       } catch (error) {
-        console.error('Oooops!There is a problem...', error.message);
+        console.error('Oooops! There is a problem...', error.message);
       }
     };
 
-    fetchCast();
+    fetchMovieCast();
   }, [movieId]);
+
+  const formatCastNames = () => {
+    return cast.map(actor => actor.name).join(', ');
+  };
 
   return (
     <div>
-      <h2>Cast</h2>
-      <ul>
-        {cast.map(actor => (
-          <li key={actor.id}>{actor.name}</li>
-        ))}
-      </ul>
+      <h3>Cast</h3>
+      <p>{formatCastNames()}</p>
     </div>
   );
 };
+
+export default Cast;

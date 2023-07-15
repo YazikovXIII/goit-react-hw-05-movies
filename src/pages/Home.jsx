@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPopularMovies } from 'helpers/fetchPopMovies';
+import { fetchPopularMovies } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
 import { Link } from 'react-router-dom';
 
-export const Home = () => {
+const Home = () => {
   const [popularMovies, setPopularMovies] = useState([]);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export const Home = () => {
 
   return (
     <div>
-      <h1>Popular Movies</h1>
+      <h3>Popular Movies</h3>
       <StyledMoviesList>
         {popularMovies.map(movie => (
           <li key={movie.id}>
@@ -32,3 +32,5 @@ export const Home = () => {
     </div>
   );
 };
+
+export default Home;

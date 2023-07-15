@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { fetchMovieDetails } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
+import { DetInnerCont, DetailsContainer } from './MovieDetails.styled';
+import { GoBackBtn } from 'components/BackBtn/BackBtn';
 
-const API_KEY = '040fbcd62819e93b33d68dfe6cbb3776';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-export const MovieDetails = () => {
+const MovieDetails = () => {
   const { movieId } = useParams();
   const [movieDetails, setMovieDetails] = useState(null);
-
+  const location = useLocation();
+  const goBack = useRef(location.state?.from ?? '/');
   useEffect(() => {
-    const fetchMovieDetails = async () => {
+    const fetchDetails = async () => {
       try {
-        const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`;
-        const response = await axios.get(url);
-        const movie = response.data;
+        const movie = await fetchMovieDetails(movieId);
         setMovieDetails(movie);
       } catch (error) {
         console.error(
@@ -25,7 +25,7 @@ export const MovieDetails = () => {
       }
     };
 
-    fetchMovieDetails();
+    fetchDetails();
   }, [movieId]);
 
   if (!movieDetails) {
@@ -34,13 +34,19 @@ export const MovieDetails = () => {
 
   return (
     <div>
-      <img
-        src={`${IMAGE_BASE_URL}${movieDetails.poster_path}`}
-        alt={movieDetails.title}
-        width="200px"
-      />
-      <h1>{movieDetails.title}</h1>
-      <p>{movieDetails.overview}</p>
+      <GoBackBtn path={goBack.current}>Go Back!</GoBackBtn>
+      <DetailsContainer>
+        <img
+          src={`${IMAGE_BASE_URL}${movieDetails.poster_path}`}
+          alt={movieDetails.title}
+          width="200px"
+        />
+        <DetInnerCont>
+          <h2>{movieDetails.title}</h2>
+          <p>{movieDetails.overview}</p>
+        </DetInnerCont>
+      </DetailsContainer>
+
       <StyledMoviesList>
         <li>
           <Link to={`/movies/${movieDetails.id}/cast`}>Cast</Link>
@@ -53,3 +59,5 @@ export const MovieDetails = () => {
     </div>
   );
 };
+
+export default MovieDetails;
