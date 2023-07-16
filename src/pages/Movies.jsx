@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { fetchMoviesBySearchQuery } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
+import { NotStyledLink } from './Home.styled';
 import { debounce } from 'lodash';
 
 const Movies = () => {
@@ -42,15 +43,17 @@ const Movies = () => {
           value={searchQuery}
           onChange={handleSearchInputChange}
         />
-        {/* <button type="submit">Search</button> */}
       </form>
       <Outlet />
       <StyledMoviesList>
         {searchResults.map(movie => (
           <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`} state={{ from: location }}>
+            <NotStyledLink
+              to={`/movies/${movie.id}`}
+              state={{ from: location }}
+            >
               {movie.title}
-            </Link>
+            </NotStyledLink>
           </li>
         ))}
       </StyledMoviesList>

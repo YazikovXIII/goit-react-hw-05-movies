@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchPopularMovies } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
 import { Link } from 'react-router-dom';
+import { NotStyledLink } from './Home.styled';
 
 const Home = () => {
   const [popularMovies, setPopularMovies] = useState([]);
@@ -25,7 +26,9 @@ const Home = () => {
       <StyledMoviesList>
         {popularMovies.map(movie => (
           <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
+            <NotStyledLink to={`/movies/${movie.id}`}>
+              {movie.title}
+            </NotStyledLink>
           </li>
         ))}
       </StyledMoviesList>
