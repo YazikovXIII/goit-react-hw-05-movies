@@ -1,43 +1,56 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { fetchMoviesBySearchQuery } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
-import { Link } from 'react-router-dom';
+import { debounce } from 'lodash';
 
 const Movies = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
 
-  const handleSearchSubmit = async event => {
-    event.preventDefault();
-    try {
-      const movies = await fetchMoviesBySearchQuery(searchQuery);
-      setSearchResults(movies);
-    } catch (error) {
-      console.error('Помилка під час пошуку фільмів:', error.message);
-    }
-  };
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const movies = await fetchMoviesBySearchQuery(searchQuery);
+        setSearchResults(movies);
+      } catch (error) {
+        console.error('Oooops!', error.message);
+      }
+    };
+
+    const delayedFetchMovies = debounce(fetchMovies, 500);
+
+    delayedFetchMovies();
+
+    return () => {
+      delayedFetchMovies.cancel();
+    };
+  }, [searchQuery]);
 
   const handleSearchInputChange = event => {
-    setSearchQuery(event.target.value);
+    setSearchParams({ search: event.target.value });
   };
 
   return (
     <div>
       <h3>Search movies</h3>
-      <form onSubmit={handleSearchSubmit}>
+      <form>
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchInputChange}
         />
-        <button type="submit">Search</button>
+        {/* <button type="submit">Search</button> */}
       </form>
       <Outlet />
       <StyledMoviesList>
         {searchResults.map(movie => (
           <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
+            <Link to={`/movies/${movie.id}`} state={{ from: location }}>
+              {movie.title}
+            </Link>
           </li>
         ))}
       </StyledMoviesList>

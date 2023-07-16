@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { fetchMovieDetails } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
 import { DetInnerCont, DetailsContainer } from './MovieDetails.styled';
 import { GoBackBtn } from 'components/BackBtn/BackBtn';
+import { Loader } from 'components/Loader';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -18,10 +19,7 @@ const MovieDetails = () => {
         const movie = await fetchMovieDetails(movieId);
         setMovieDetails(movie);
       } catch (error) {
-        console.error(
-          'Помилка під час отримання деталей фільму:',
-          error.message
-        );
+        console.error('Oooops!', error.message);
       }
     };
 
@@ -55,7 +53,9 @@ const MovieDetails = () => {
           <Link to={`/movies/${movieDetails.id}/reviews`}>Reviews</Link>
         </li>
       </StyledMoviesList>
-      <Outlet />
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 };
