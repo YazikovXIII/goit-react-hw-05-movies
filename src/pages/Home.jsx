@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPopularMovies } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
-import { Link } from 'react-router-dom';
 import { NotStyledLink } from './Home.styled';
 
 const Home = () => {

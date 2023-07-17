@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useSearchParams, useLocation, Link } from 'react-router-dom';
+import { Outlet, useSearchParams, useLocation } from 'react-router-dom';
 import { fetchMoviesBySearchQuery } from 'helpers/fetchDataMovies';
 import { StyledMoviesList } from './Home.styled';
 import { NotStyledLink } from './Home.styled';
